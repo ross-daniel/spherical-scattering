@@ -67,7 +67,7 @@ class PEC_CYLINDER_TM:
 
 if __name__ == '__main__':
     cylinder_scatterer = PEC_CYLINDER_TM(1.0, 1.0)
-    R, Phi = np.meshgrid(cylinder_scatterer.rho, cylinder_scatterer.phi)
+    """R, Phi = np.meshgrid(cylinder_scatterer.rho, cylinder_scatterer.phi)
     # 3) Flatten for Scatterpolar
     r_flat = R.ravel()
     theta_flat = np.degrees(Phi.ravel())  # Plotly uses degrees by default
@@ -98,4 +98,4 @@ if __name__ == '__main__':
         )
     )
 
-    fig.show()
+    fig.show()"""
