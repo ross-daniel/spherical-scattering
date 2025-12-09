@@ -29,7 +29,7 @@ class PLANE_WAVE_EXCITATION:
         self.xy_pairs = np.array([(x_val, y_val) for x_val in self.x for y_val in self.y])
         self.rho_phi_pairs = np.zeros_like(self.xy_pairs)
         for index, (x, y) in enumerate(self.xy_pairs):
-            self.rho_phi_pairs[index] = (np.sqrt(x ** 2 + y ** 2), np.atan(y/x))
+            self.rho_phi_pairs[index] = (np.sqrt(x ** 2 + y ** 2), np.atan2(y, x))
         self.e_inc_z_cylindrical = self.construct_excitation()
 
     def construct_excitation(self):

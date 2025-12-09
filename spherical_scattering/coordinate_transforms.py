@@ -3,7 +3,7 @@ from typing_extensions import deprecated
 import numpy as np
 from typing import Tuple
 
-@deprecated
+@deprecated("no need to call this function anymore")
 def cyl_to_cart(rhos: np.ndarray, phis: np.ndarray, func_rho_phi: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     assert rhos.shape == phis.shape
     func_xy = np.zeros((rhos.shape[0], phis.shape[0]), dtype=complex)
