@@ -13,18 +13,17 @@ from coordinate_transforms import (
 class PLANE_WAVE_EXCITATION:
     e_0: complex  # incidient electric field magnitude at the origin point of the plane wave
     k: float  # wave number
-    num_rhos: int  # number of interpolation points in rho
+    num_samples: int  # number of interpolation points in rho
     rho_max: float
-    num_phis: int  # number of interpolation points in phi
     n: int  # number of sample points to approximation infinite sum for change of basis
-    rho: np.ndarray = field(init=False)
-    phi: np.ndarray = field(init=False)
+    xy_pairs: np.ndarray = field(init=False)
+    rho_phi_pairs: np.ndarray = field(init=False)
     e_inc_z_cylindrical: np.ndarray = field(init=False, repr=False)
 
     def __post_init__(self):
         lam = 2 * np.pi / self.k
-        self.x = np.linspace(-5*lam, 5*lam, num=self.num_rhos)
-        self.y = np.linspace(-5*lam, 5*lam, num=self.num_phis)
+        self.x = np.linspace(-5*lam, 5*lam, num=self.num_samples)
+        self.y = np.linspace(-5*lam, 5*lam, num=self.num_samples)
         #self.rho = np.linspace(0, self.rho_max, self.num_rhos)
         #self.phi = np.linspace(0, 2 * np.pi, self.num_phis)
         self.xy_pairs = np.array([(x_val, y_val) for x_val in self.x for y_val in self.y])
@@ -64,16 +63,14 @@ if __name__ == "__main__":
     lam = 1
     k = 2 * np.pi / lam
     e_0 = 1.0
-    num_rhos = 200
-    num_phis = 200
+    num_samples = 200
     rho_max = 5.0 * np.sqrt(2)
     for n in n_vals:
         plane_wave_approx = PLANE_WAVE_EXCITATION(
             e_0=e_0,
             k=k,
-            num_rhos=num_rhos,
+            num_samples=num_samples,
             rho_max=rho_max,
-            num_phis=num_phis,
             n=n
         )
         plane_wave_approx.plot_plane_wave()
