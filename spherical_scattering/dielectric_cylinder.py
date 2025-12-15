@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.special import (
-    jv, jvp, h2vp, hankel2
+    jv, jvp, h2vp, hankel2, hankel1
 )
 from cylindrical_plane_wave import (
     PlaneWave
@@ -78,7 +78,7 @@ class DielectricCylinder:
     def compute_scattered_field(self):
         f_scz = np.zeros(len(self.rho_phi_pairs), dtype=complex)
         for index, (rho, phi) in enumerate(self.rho_phi_pairs):
-            if rho >= self.a:
+            if rho <= self.a:
                 f_scz[index] = 0.0
             else:
                 temp_sum = 0.0
@@ -101,7 +101,7 @@ class DielectricCylinder:
             ax=ax,
             x_array=self.x,
             y_array=self.y,
-            func_xy=self.f_scz.real,
+            func_xy=self.f_scz.real + self.f_intz.real,
             title=title
         )
         circ = plt.Circle((0, 0), self.a, fill=False, color='gray')
