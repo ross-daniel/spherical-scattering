@@ -3,9 +3,8 @@ import matplotlib.pyplot as plt
 from scipy.special import (
     jv, jvp, h2vp, hankel2
 )
-import pandas as pd
 from cylindrical_plane_wave import (
-    PLANE_WAVE_EXCITATION_TM, PLANE_WAVE_EXCITATION_TE, PlaneWave
+    PlaneWave
 )
 from coordinate_transforms import (
     cyl_to_cart, plot_cyl_on_cart

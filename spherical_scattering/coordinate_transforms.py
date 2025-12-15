@@ -1,6 +1,4 @@
 import matplotlib.pyplot as plt
-from typing_extensions import deprecated
-
 import numpy as np
 from typing import Tuple
 
