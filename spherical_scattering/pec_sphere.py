@@ -77,14 +77,14 @@ class SpherePEC:
         # find coefficients an and bn
         self.an, self.bn = self.calculate_coefficients()
         # use coefficients an and bn to solve for phi components of electric field in yz plane and magnetic field in xz plane
-        #self.e_sc_phi, self.h_sc_phi = self.calculate_scattered_fields()
+        self.e_sc_phi, self.h_sc_phi = self.calculate_scattered_fields()
         # calculate total fields
-        #self.e_tot_phi, self.h_tot_phi = self.e_sc_phi + self.e_inc_phi, self.h_sc_phi + self.h_inc_phi
+        self.e_tot_phi, self.h_tot_phi = self.e_sc_phi + self.e_inc_phi, self.h_sc_phi + self.h_inc_phi
         # plot scattered fields
-        #self.plot_scattered_fields()
+        self.plot_scattered_fields()
         # plot total fields
-        #self.plot_total_fields_snapshot()
-        #self.plot_total_fields_magnitude()
+        self.plot_total_fields_snapshot()
+        self.plot_total_fields_magnitude()
 
     def calculate_coefficients(self):
         an = np.zeros(self.N, dtype=complex)
@@ -261,7 +261,7 @@ def main():
     pec_sphere = SpherePEC()
     fig, ax = plt.subplots()
     pec_sphere.plot_monostatic_rcs_db(ax)
-    ax.set_title('Monostatic RCS of PEC Sphere Excited by TM Wave')
+    ax.set_title('Monostatic RCS of PEC Sphere Normalized by Radius')
     ax.set_xlabel(r"$\frac{a}{\lambda}$")
     ax.set_ylabel(r"$\sigma_{3D}/\pi a^2$")
     plt.show()
