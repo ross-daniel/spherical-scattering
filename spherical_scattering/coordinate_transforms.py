@@ -12,7 +12,7 @@ def plot_cyl_on_cart(fig: plt.Figure, ax: plt.Axes, x_array: np.ndarray, y_array
                      title = None, xlabel: str = 'x', ylabel: str = 'y') -> None:
     X, Y = np.meshgrid(x_array, y_array, indexing='ij')
     f_xy = np.reshape(func_xy, (len(x_array), len(y_array)))
-    cs = ax.contourf(X, Y, f_xy, levels=np.linspace(np.nanmin(f_xy), np.nanmax(f_xy), 41))
+    cs = ax.contourf(X, Y, f_xy, levels=np.linspace(-1, 1, 41), extend='both')
     if title is None:
         title = "Field"
     else:

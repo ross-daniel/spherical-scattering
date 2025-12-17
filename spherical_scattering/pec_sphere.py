@@ -69,6 +69,7 @@ class SpherePEC:
         )
         self.x, self.y, self.z = self.spherical_plane_wave.x, self.spherical_plane_wave.y, self.spherical_plane_wave.z
         self.xz_pairs = self.spherical_plane_wave.xz_pairs
+        self.yz_pairs = self.spherical_plane_wave.yz_pairs
         self.r_theta_pairs = self.spherical_plane_wave.r_theta_pairs
         self.e_inc_phi = self.spherical_plane_wave.e_inc_phi
         self.h_inc_phi = self.spherical_plane_wave.h_inc_phi
