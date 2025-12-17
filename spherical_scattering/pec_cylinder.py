@@ -13,7 +13,7 @@ from coordinate_transforms import (
 
 class CylinderPEC:
     def __init__(self, mode: str = "TM", incident_field: complex = 1.0, k: float = 2 * np.pi, a: float = 1.0,
-                 N: int = 40, discretization_level: int = 100, max_rho: float = 5.0 * np.sqrt(2)):
+                 N: int = 80, discretization_level: int = 100, max_rho: float = 5.0 * np.sqrt(2)):
         if mode.upper() != "TM" and mode.upper() != "TE":
             raise ValueError("Invalid mode, must be 'TM' or 'TE'")
         # initialize variables
@@ -146,7 +146,7 @@ class CylinderPEC:
         ax.plot(phis, scatter_width_lambda_db, label=label)
         return ax
 
-if __name__ == '__main__':
+def main():
     # TM Mode
     pec_cylinder_tm = CylinderPEC("TM")
 
@@ -175,4 +175,7 @@ if __name__ == '__main__':
     ax2.set_xlabel(r'$\phi [radians]$')
     ax2.set_ylabel(r'$\sigma_{2D}/\lambda [dB]$')
     plt.show()
+
+if __name__ == '__main__':
+    main()
 

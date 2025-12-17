@@ -54,8 +54,7 @@ class PlaneWave:
         plt.title(title)
         plt.show()
 
-
-if __name__ == "__main__":
+def main():
     n_vals = [1, 5, 10, 20, 40, 80]
     lam = 1
     k = 2 * np.pi / lam
@@ -72,3 +71,5 @@ if __name__ == "__main__":
         )
         plane_wave_approx.plot_plane_wave()
 
+if __name__ == "__main__":
+    main()

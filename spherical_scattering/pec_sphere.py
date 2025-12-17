@@ -257,8 +257,7 @@ class SpherePEC:
         ax.plot(a, 10 * np.log10(rcs_vals))
         return ax
 
-
-if __name__ == '__main__':
+def main():
     pec_sphere = SpherePEC()
     fig, ax = plt.subplots()
     pec_sphere.plot_monostatic_rcs_db(ax)
@@ -266,3 +265,6 @@ if __name__ == '__main__':
     ax.set_xlabel(r"$\frac{a}{\lambda}$")
     ax.set_ylabel(r"$\sigma_{3D}/\pi a^2$")
     plt.show()
+
+if __name__ == '__main__':
+    main()

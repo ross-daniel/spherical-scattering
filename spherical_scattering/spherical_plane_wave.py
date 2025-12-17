@@ -95,7 +95,7 @@ class SphericalPlaneWave:
         plt.title(title)
         plt.show()
 
-if __name__ == "__main__":
+def main():
     n_vals = [1, 5, 10, 20, 40, 80]
     lam = 1
     k = 2 * np.pi / lam
@@ -110,3 +110,6 @@ if __name__ == "__main__":
             r_max=r_max,
             N=n
         )
+
+if __name__ == "__main__":
+    main()

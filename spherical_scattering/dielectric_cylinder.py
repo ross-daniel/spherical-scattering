@@ -14,7 +14,7 @@ import spherical_scattering.constants as const
 
 class DielectricCylinder:
     def __init__(self, material: tuple[float, float], mode: str = "TM", incident_field: complex = 1.0, k: float = 2 * np.pi, a: float = 1.0,
-                 N: int = 40, discretization_level: int = 100, max_rho: float = 5.0 * np.sqrt(2)):
+                 N: int = 80, discretization_level: int = 100, max_rho: float = 5.0 * np.sqrt(2)):
         if mode.upper() != "TM": #and mode.upper() != "TE":
             raise ValueError("Invalid mode, must be 'TM'")
         # initialize variables
@@ -154,7 +154,7 @@ class DielectricCylinder:
         ax.plot(phis, scatter_width_lambda_db, label=label)
         return ax
 
-if __name__ == "__main__":
+def main():
     dielectric_cylinder = DielectricCylinder((4.0, 1.0))
 
     # Plot Bistatic Scatter Width
@@ -164,3 +164,6 @@ if __name__ == "__main__":
     ax1.set_xlabel(r'$\phi [radians]$')
     ax1.set_ylabel(r'$\sigma_{2D}/\lambda [dB]$')
     plt.show()
+
+if __name__ == "__main__":
+    main()
