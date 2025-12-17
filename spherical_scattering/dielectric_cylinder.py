@@ -102,7 +102,9 @@ class DielectricCylinder:
             x_array=self.x,
             y_array=self.y,
             func_xy=self.f_scz.real + self.f_intz.real,
-            title=title
+            title=title,
+            xlabel='y',
+            ylabel='x'
         )
         circ = plt.Circle((0, 0), self.a, fill=False, color='gray')
         ax.add_patch(circ)
@@ -122,7 +124,9 @@ class DielectricCylinder:
             x_array=self.x,
             y_array=self.y,
             func_xy=self.f_tot.real,
-            title=title
+            title=title,
+            xlabel='y',
+            ylabel='x'
         )
         circ = plt.Circle((0, 0), self.a, fill=False, color='gray')
         ax.add_patch(circ)

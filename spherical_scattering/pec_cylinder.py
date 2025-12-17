@@ -83,7 +83,9 @@ class CylinderPEC:
             x_array=self.x,
             y_array=self.y,
             func_xy=self.f_scz.real,
-            title=title
+            title=title,
+            xlabel='y',
+            ylabel='x'
         )
         circ = plt.Circle((0, 0), self.a, fill=True, color='gray')
         ax.add_patch(circ)
@@ -103,7 +105,9 @@ class CylinderPEC:
             x_array=self.x,
             y_array=self.y,
             func_xy=self.f_tot.real,
-            title=title
+            title=title,
+            xlabel='y',
+            ylabel='x'
         )
         circ = plt.Circle((0, 0), self.a, fill=True, color='gray')
         ax.add_patch(circ)

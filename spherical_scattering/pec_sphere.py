@@ -81,8 +81,10 @@ class SpherePEC:
         # calculate total fields
         self.e_tot_phi, self.h_tot_phi = self.e_sc_phi + self.e_inc_phi, self.h_sc_phi + self.h_inc_phi
         # plot scattered fields
-        self.plot_scattered_fields(title1 = None, title2 = None)
+        self.plot_scattered_fields()
         # plot total fields
+        self.plot_total_fields_snapshot()
+        self.plot_total_fields_magnitude()
 
     def calculate_coefficients(self):
         an = np.zeros(self.N, dtype=complex)
@@ -167,7 +169,7 @@ class SpherePEC:
             h_sc_phi[index] = h_sum
         return e_sc_phi, h_sc_phi
 
-    def plot_scattered_fields(self, title1 = None, title2 = None):
+    def plot_fields(self, func_zy, func_zx, title1 = None, title2 = None):
         fig1, ax1 = plt.subplots()
         fig2, ax2 = plt.subplots()
         if title1 is None:
@@ -181,7 +183,7 @@ class SpherePEC:
             ax=ax1,
             x_array=self.z,
             y_array=self.y,
-            func_xy=self.e_sc_phi.real,
+            func_xy=func_zy,
             title=title1,
             xlabel='z',
             ylabel='y'
@@ -191,7 +193,7 @@ class SpherePEC:
             ax=ax2,
             x_array=self.z,
             y_array=self.x,
-            func_xy=self.h_sc_phi.real * eta_0,
+            func_xy=func_zx,
             title=title2,
             xlabel='z',
             ylabel='x'
@@ -199,6 +201,27 @@ class SpherePEC:
         ax1.add_patch(plt.Circle((0, 0), self.a, fill=True, color='white'))
         ax2.add_patch(plt.Circle((0, 0), self.a, fill=True, color='white'))
         plt.show()
+
+    def plot_scattered_fields(self):
+        title1 = r'Real Part of Scattered Electric Field ($\phi$-component)'
+        title2 = r'Real Part of Scattered Magnetic Field ($\phi$-component)'
+        func_zy = self.e_sc_phi.real
+        func_zx = self.h_sc_phi.real * eta_0
+        self.plot_fields(func_zy, func_zx, title1, title2)
+
+    def plot_total_fields_snapshot(self, title1 = None, title2 = None):
+        title1 = r'Real Part of Total Electric Field ($\phi$-component)'
+        title2 = r'Real Part of Total Magnetic Field ($\phi$-component)'
+        func_zy = self.e_tot_phi.real
+        func_zx = self.h_tot_phi.real * eta_0
+        self.plot_fields(func_zy, func_zx, title1, title2)
+
+    def plot_total_fields_magnitude(self, title1 = None, title2 = None):
+        title1 = r'Magnitude of Total Electric Field ($\phi$-component)'
+        title2 = r'Magnitude of Total Magnetic Field ($\phi$-component)'
+        func_zy = np.abs(self.e_tot_phi)
+        func_zx = np.abs(self.h_tot_phi * eta_0)
+        self.plot_fields(func_zy, func_zx, title1, title2)
 
 
 if __name__ == '__main__':
