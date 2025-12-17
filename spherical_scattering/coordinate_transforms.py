@@ -8,15 +8,16 @@ def cyl_to_cart(rho_phi: np.ndarray) -> np.ndarray:
     xy_list = [(np.sqrt(x ** 2 + y ** 2), np.atan2(y, x)) for x, y in rho_phi]
     return np.asarray(xy_list)
 
-def plot_cyl_on_cart(fig: plt.Figure, ax: plt.Axes, x_array: np.ndarray, y_array: np.ndarray, func_xy: np.ndarray, title = None) -> None:
+def plot_cyl_on_cart(fig: plt.Figure, ax: plt.Axes, x_array: np.ndarray, y_array: np.ndarray, func_xy: np.ndarray,
+                     title = None, xlabel: str = 'x', ylabel: str = 'y') -> None:
+    X, Y = np.meshgrid(x_array, y_array, indexing='ij')
     f_xy = np.reshape(func_xy, (len(x_array), len(y_array)))
-    X, Y = np.meshgrid(x_array, y_array)
-    cs = ax.contourf(X, Y, f_xy)
+    cs = ax.contourf(X, Y, f_xy, levels=np.linspace(np.nanmin(f_xy), np.nanmax(f_xy), 41))
     if title is None:
         title = "Field"
     else:
         title = title
     ax.set_title(title)
-    ax.set_xlabel('x')
-    ax.set_ylabel('y')
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
     fig.colorbar(cs, ax=ax)
