@@ -128,5 +128,35 @@ class DielectricCylinder:
         ax.add_patch(circ)
         plt.show()
 
+    def s(self, ka, phi):
+        S_n = np.zeros(self.N, dtype=complex)
+        phase_terms = np.zeros_like(S_n)
+        kda = ka * np.sqrt(self.eps_r * self.mu_r)
+        for n in range(self.N):
+            # compute S_n[n] and phase_term[n]
+            num = np.sqrt(self.mu_r) * jvp(n, ka, 1) * jv(n, kda) - np.sqrt(self.eps_r) * jv(n, ka) * jvp(n, kda, 1)
+            denom = np.sqrt(self.mu_r) * h2vp(n, ka, 1) * jv(n, kda) - np.sqrt(self.eps_r) * hankel2(n, ka) * jvp(n, kda, 1)
+            S_n[n] = num / denom
+            phase_terms[n] = np.cos(n * phi)
+        # $S(\phi) = S_0 + 2 \sum_{n=1}^{\inf} S_n(ka) * cos(n \phi)
+        S = S_n[0] + 2 * np.sum(S_n[1:] * phase_terms[1:], axis=0)
+        S_norm = (2.0 / np.pi) * np.abs(S) ** 2
+        return S_norm
+
+    def plot_bistatic_scatter_width(self, ax: plt.Axes):
+        phis = np.linspace(0, 2 * np.pi, 100)
+        scatter_width_lambda_db = np.array([10 * np.log10(self.s(self.k * self.a, phi)) for phi in phis])
+        label = f'{self.mode.upper()} Wave Excitation'
+        ax.plot(phis, scatter_width_lambda_db, label=label)
+        return ax
+
 if __name__ == "__main__":
     dielectric_cylinder = DielectricCylinder((4.0, 1.0))
+
+    # Plot Bistatic Scatter Width
+    fig1, ax1 = plt.subplots()
+    dielectric_cylinder.plot_bistatic_scatter_width(ax1)
+    ax1.set_title(f'2D Bistatic Scatter Width of Dielectric Cylinder\nTM Wave Excitation')
+    ax1.set_xlabel(r'$\phi [radians]$')
+    ax1.set_ylabel(r'$\sigma_{2D}/\lambda [dB]$')
+    plt.show()
