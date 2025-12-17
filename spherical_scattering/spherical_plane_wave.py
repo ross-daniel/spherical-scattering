@@ -31,7 +31,7 @@ class SphericalPlaneWave:
         self.yz_pairs = np.array([(y_val, z_val) for y_val in self.y for z_val in self.z])
         self.r_theta_pairs = np.zeros_like(self.xz_pairs)
         for index, (x, z) in enumerate(self.xz_pairs):
-            self.r_theta_pairs[index] = (np.sqrt(x ** 2 + z ** 2), np.atan2(x, z))
+            self.r_theta_pairs[index] = (np.sqrt(x ** 2 + z ** 2), np.atan2(x, z))  # want [0,pi] here --> atan NOT atan2
         self.e_inc = np.array(
             [
                 np.zeros(len(self.r_theta_pairs), dtype=complex),  # e_r
@@ -90,7 +90,7 @@ class SphericalPlaneWave:
         X, Z = np.meshgrid(self.x, self.z)
         #max_val = max(np.abs(self.f_inc))
         f_inc_cart = np.reshape(self.f_inc, (len(self.x), len(self.z))) #/ max_val
-        plt.contourf(X, Z, f_inc_cart.real)
+        plt.contourf(Z, X, f_inc_cart.real)
         plt.colorbar()
         plt.title(title)
         plt.show()
