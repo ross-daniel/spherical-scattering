@@ -77,14 +77,14 @@ class SpherePEC:
         # find coefficients an and bn
         self.an, self.bn = self.calculate_coefficients()
         # use coefficients an and bn to solve for phi components of electric field in yz plane and magnetic field in xz plane
-        self.e_sc_phi, self.h_sc_phi = self.calculate_scattered_fields()
+        #self.e_sc_phi, self.h_sc_phi = self.calculate_scattered_fields()
         # calculate total fields
-        self.e_tot_phi, self.h_tot_phi = self.e_sc_phi + self.e_inc_phi, self.h_sc_phi + self.h_inc_phi
+        #self.e_tot_phi, self.h_tot_phi = self.e_sc_phi + self.e_inc_phi, self.h_sc_phi + self.h_inc_phi
         # plot scattered fields
-        self.plot_scattered_fields()
+        #self.plot_scattered_fields()
         # plot total fields
-        self.plot_total_fields_snapshot()
-        self.plot_total_fields_magnitude()
+        #self.plot_total_fields_snapshot()
+        #self.plot_total_fields_magnitude()
 
     def calculate_coefficients(self):
         an = np.zeros(self.N, dtype=complex)
@@ -223,6 +223,46 @@ class SpherePEC:
         func_zx = np.abs(self.h_tot_phi * eta_0)
         self.plot_fields(func_zy, func_zx, title1, title2)
 
+    def monostatic_rcs(self, ka):
+        nmax = int(np.ceil(ka + 4.0 * ka ** (1.0 / 3.0) + 2.0))
+        nmax = max(1, min(self.N, nmax))
+        n = np.arange(1, nmax+1)
+        h_hat, h_hat_prime = riccati_hankel2_all(self.N, ka, derivative=True)
+        S = np.sum(((-1) ** n) * (2*n + 1) / h_hat_prime[n] / h_hat[n])
+        S_norm = np.abs(S) ** 2
+        return S_norm / (ka ** 2)
+
+    def monostatic_rcs_chat(self, ka):
+        ka = float(ka)
+
+        # truncate the series based on ka (prevents huge high-order terms for small ka)
+        n_max = min(self.N, int(np.ceil(ka + 4.0 * ka ** (1.0 / 3.0) + 2.0)))
+        if n_max < 1:
+            return 0.0
+
+        h_hat, h_hat_prime = riccati_hankel2_all(n_max, ka, derivative=True)
+
+        n = np.arange(1, n_max + 1)
+        signs = np.where(n % 2 == 0, 1.0, -1.0)  # (-1)^n without precedence bugs
+
+        # Eq. 7.4.48 uses 1/(Hhat' * Hhat). Do it as two divides to avoid overflow in the product.
+        term = signs * (2.0 * n + 1.0) / h_hat_prime[n] / h_hat[n]
+        S = np.sum(term)
+
+        return (np.abs(S) ** 2) / (ka ** 2)
+
+    def plot_monostatic_rcs_db(self, ax: plt.Axes):
+        a = np.linspace(1e-2, 3.0, 300)
+        rcs_vals = np.array([self.monostatic_rcs(2*np.pi*a_val) for a_val in a])
+        ax.plot(a, 10 * np.log10(rcs_vals))
+        return ax
+
 
 if __name__ == '__main__':
     pec_sphere = SpherePEC()
+    fig, ax = plt.subplots()
+    pec_sphere.plot_monostatic_rcs_db(ax)
+    ax.set_title('Monostatic RCS of PEC Sphere Excited by TM Wave')
+    ax.set_xlabel(r"$\frac{a}{\lambda}$")
+    ax.set_ylabel(r"$\sigma_{3D}/\pi a^2$")
+    plt.show()
