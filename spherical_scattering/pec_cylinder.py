@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.special import (
-    jv, jvp, h2vp, hankel2
+    jv, jvp, h2vp, hankel2, jn
 )
 from cylindrical_plane_wave import (
     PlaneWave
@@ -109,10 +109,66 @@ class CylinderPEC:
         ax.add_patch(circ)
         plt.show()
 
+    def s(self, ka: float, phi):
+        S_n = np.zeros(self.N, dtype=complex)
+        phase_terms = np.zeros(self.N, dtype=complex)
+        if self.mode.upper() == "TM":
+            for n in range(self.N):
+                S_n[n] += jn(n, ka) / hankel2(n, ka)
+                phase_terms[n] = np.cos(n * phi)
+        elif self.mode.upper() == "TE":
+            for n in range(self.N):
+                S_n[n] = jvp(n, ka, 1) / h2vp(n, ka, 1)
+                phase_terms[n] = np.cos(n * phi)
+        else:
+            raise ValueError('Mode must be TM or TE')
+        # $S(\phi) = S_0 + 2 \sum_{n=1}^{\inf} S_n(ka) * cos(n \phi)
+        S = S_n[0] + 2 * np.sum(S_n[1:] * phase_terms[1:], axis=0)
+        S_norm = (2.0 / np.pi) * np.abs(S) ** 2
+        return S_norm
+
+    def plot_monostatic_scatter_width(self, ax: plt.Axes):
+        a_lam = np.linspace(1e-6, 2, 100)
+        ka = a_lam * 2 * np.pi
+        scatter_width_lambda = np.array([self.s(ka_val, np.pi) for ka_val in ka])
+        label = f'{self.mode.upper()} Wave Excitation'
+        ax.plot(a_lam, scatter_width_lambda, label=label)
+        return ax
+
+    def plot_bistatic_scatter_width(self, ax: plt.Axes):
+        phis = np.linspace(0, 2 * np.pi, 100)
+        scatter_width_lambda_db = np.array([10 * np.log10(self.s(self.k * self.a, phi)) for phi in phis])
+        label = f'{self.mode.upper()} Wave Excitation'
+        ax.plot(phis, scatter_width_lambda_db, label=label)
+        return ax
+
 if __name__ == '__main__':
     # TM Mode
     pec_cylinder_tm = CylinderPEC("TM")
 
     # TE Mode
     pec_cylinder_te = CylinderPEC("TE")
+
+    # Plot Monostatic Scatter Width
+    fig, ax = plt.subplots()
+    pec_cylinder_tm.plot_monostatic_scatter_width(ax)
+    pec_cylinder_te.plot_monostatic_scatter_width(ax)
+    ax.set_title('2D Monostatic Scatter Width of PEC Cylinder')
+    ax.set_xlabel(r'$\frac{a}{\lambda}$')
+    ax.set_ylabel(r'$\sigma_{2D}/\lambda$')
+    ax.legend()
+    plt.show()
+
+    # Plot Bistatic Scatter Width
+    fig1, ax1 = plt.subplots()
+    fig2, ax2 = plt.subplots()
+    pec_cylinder_tm.plot_bistatic_scatter_width(ax1)
+    pec_cylinder_te.plot_bistatic_scatter_width(ax2)
+    ax1.set_title(f'2D Bistatic Scatter Width of PEC Cylinder\nTM Wave Excitation')
+    ax1.set_xlabel(r'$\phi [radians]$')
+    ax1.set_ylabel(r'$\sigma_{2D}/\lambda [dB]$')
+    ax2.set_title(f'2D Bistatic Scatter Width of PEC Cylinder\nTE Wave Excitation')
+    ax2.set_xlabel(r'$\phi [radians]$')
+    ax2.set_ylabel(r'$\sigma_{2D}/\lambda [dB]$')
+    plt.show()
 
